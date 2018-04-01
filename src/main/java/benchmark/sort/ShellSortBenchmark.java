@@ -1,6 +1,6 @@
-package benchmark;
+package benchmark.sort;
 
-import com.max.algs.sorting.InsertionSort;
+import com.max.algs.sorting.ShellSort;
 import com.max.algs.util.ArrayUtils;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -12,19 +12,19 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Micro benchmark for insertion sort.
+ * Micro benchmark for a shell sort vs jdk-sort algorithm.
  */
 @State(Scope.Group)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 5, time = 1)
 @Fork(5)
-public class InsertionSortBenchmark {
+public class ShellSortBenchmark {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(InsertionSortBenchmark.class.getSimpleName())
+                .include(ShellSortBenchmark.class.getSimpleName())
                 .threads(Runtime.getRuntime().availableProcessors())
                 .build();
 
@@ -32,28 +32,28 @@ public class InsertionSortBenchmark {
     }
 
     @Benchmark
-    @Group("sortWithSentinel")
+    @Group("shellSort")
     @GroupThreads(4)
-    public void sortWithSentinel(ArrPerThread state) {
-        InsertionSort.sortWithSentinel(state.arr1);
+    public void shellSort(ArrPerThread state) {
+        ShellSort.sort(state.arr1);
     }
 
     @Benchmark
-    @Group("sort")
+    @Group("jdkSort")
     @GroupThreads(4)
-    public void sort(ArrPerThread state) {
-        InsertionSort.sort(state.arr2);
+    public void jdkSort(ArrPerThread state) {
+        Arrays.sort(state.arr2);
     }
 
     @State(Scope.Thread)
     public static class ArrPerThread {
 
-        int[] arr1;
-        int[] arr2;
+        public int[] arr1;
+        public int[] arr2;
 
         @Setup(Level.Invocation)
         public void setUp() {
-            arr1 = ArrayUtils.generateRandomArray(1_000);
+            arr1 = ArrayUtils.generateRandomArray(1_000_000);
             arr2 = Arrays.copyOf(arr1, arr1.length);
         }
 

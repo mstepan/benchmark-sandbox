@@ -1,6 +1,6 @@
-package benchmark;
+package benchmark.sort;
 
-import com.max.algs.sorting.ShellSort;
+import com.max.algs.sorting.InsertionSort;
 import com.max.algs.util.ArrayUtils;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -12,19 +12,19 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Micro benchmark for a shell sort vs jdk-sort algorithm.
+ * Micro benchmark for insertion sort.
  */
 @State(Scope.Group)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Fork(5)
-public class ShellSortBenchmark {
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 5, time = 1)
+@Fork(2)
+public class InsertionSortBenchmark {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(ShellSortBenchmark.class.getSimpleName())
+                .include(InsertionSortBenchmark.class.getSimpleName())
                 .threads(Runtime.getRuntime().availableProcessors())
                 .build();
 
@@ -32,28 +32,28 @@ public class ShellSortBenchmark {
     }
 
     @Benchmark
-    @Group("shellSort")
+    @Group("sortWithSentinel")
     @GroupThreads(4)
-    public void shellSort(ArrPerThread state) {
-        ShellSort.sort(state.arr1);
+    public void sortWithSentinel(ArrPerThread state) {
+        InsertionSort.sortWithSentinel(state.arr1);
     }
 
     @Benchmark
-    @Group("jdkSort")
+    @Group("sort")
     @GroupThreads(4)
-    public void jdkSort(ArrPerThread state) {
-        Arrays.sort(state.arr2);
+    public void sort(ArrPerThread state) {
+        InsertionSort.sort(state.arr2);
     }
 
     @State(Scope.Thread)
     public static class ArrPerThread {
 
-        public int[] arr1;
-        public int[] arr2;
+        int[] arr1;
+        int[] arr2;
 
         @Setup(Level.Invocation)
         public void setUp() {
-            arr1 = ArrayUtils.generateRandomArray(1_000_000);
+            arr1 = ArrayUtils.generateRandomArray(1_000);
             arr2 = Arrays.copyOf(arr1, arr1.length);
         }
 
