@@ -1,56 +1,52 @@
-package benchmark.example;
+package benchmark;
 
-import com.max.algs.util.ArrayUtils;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Micro benchmark example.
+ * Micro benchmark division reduction to shift.
  */
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
 @Fork(2)
-@State(Scope.Thread)
-public class BenchmarkExample {
+public class ArithmeticReductionBenchmark {
 
-    public int[] arr;
-    public int[] copy;
+    @State(Scope.Benchmark)
+    public static class Data {
 
-    @Setup(Level.Invocation)
-    public void setUp() {
-        arr = ArrayUtils.generateRandomArray(1_000);
-        copy = new int[arr.length];
-    }
+        private static final Random RAND = new Random(532);
 
-    @TearDown(Level.Invocation)
-    public void tearDown() {
-        arr = null;
-        copy = null;
-    }
+        public int x;
 
-    @Benchmark
-    public void copyIntrinsics() {
-        System.arraycopy(arr, 0, copy, 0, arr.length);
-    }
-
-    @Benchmark
-    public void loopCopy() {
-        for (int i = 0; i < arr.length; ++i) {
-            copy[i] = arr[i];
+        @Setup(Level.Trial)
+        public void setUp() {
+            x = RAND.nextInt();
         }
+
+    }
+
+    @Benchmark
+    public int div4(Data state) {
+        return state.x / 4;
+    }
+
+    @Benchmark
+    public int div5(Data state) {
+        return state.x / 5;
     }
 
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkExample.class.getSimpleName())
+                .include(ArithmeticReductionBenchmark.class.getSimpleName())
 //                .threads(Runtime.getRuntime().availableProcessors())
                 .build();
 
