@@ -7,54 +7,57 @@ import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLongArray;
 
 /**
- * Micro benchmark for false sharing for L1 cache.
+ * False sharing of cache lines between threads.
  */
-@State(Scope.Group)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 10, time = 1)
+@Threads(2)
+@State(Scope.Benchmark)
 @Fork(5)
 public class FalseSharingBenchmark {
 
-    /**
-     * Cache line size: 64 bytes or 16 ints
-     */
-    public final int[] array = new int[17];
+    // cache line size 64 bytes, aka 8 longs
+    // [0...7] - 1st line
+    // [8..15] - 2nd line
+    private final AtomicLongArray arr = new AtomicLongArray(16);
+
+    @Param({"1", "8"})
+    private int otherIndex;
+
+    @State(Scope.Thread)
+    public static class ThreadData {
+
+        private static final AtomicInteger THREAD_COUNTER = new AtomicInteger();
+
+        private final int threadId;
+
+        public ThreadData() {
+            this.threadId = THREAD_COUNTER.getAndIncrement();
+        }
+    }
+
+    @Benchmark
+    public void benchmark(ThreadData data) {
+        if (data.threadId == 0) {
+            this.arr.incrementAndGet(0);
+        }
+        else {
+            this.arr.incrementAndGet(this.otherIndex);
+        }
+    }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
                 .include(FalseSharingBenchmark.class.getSimpleName())
-                .threads(Runtime.getRuntime().availableProcessors())
                 .build();
 
         new Runner(opt).run();
-    }
-
-    @Benchmark
-    @Group("near")
-    public void modifyNearA() {
-        array[0]++;
-    }
-
-    @Benchmark
-    @Group("near")
-    public void modifyNearB() {
-        array[1]++;
-    }
-
-    @Benchmark
-    @Group("far")
-    public void modifyFarA() {
-        array[0]++;
-    }
-
-    @Benchmark
-    @Group("far")
-    public void modifyFarB() {
-        array[16]++;
     }
 
 }

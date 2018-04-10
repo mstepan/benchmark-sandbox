@@ -1,9 +1,13 @@
 import java.util.concurrent.TimeUnit;
 
+/*
+-XX:+UnlockDiagnosticVMOptions -XX:+TraceClassLoading -XX:+LogCompilation -XX:+PrintAssembly
+ */
 public class Unreached {
 
     static volatile Object obj;
-    static volatile boolean output;
+    static volatile boolean isNull;
+    static volatile boolean notNull;
 
     public static void main(String[] args) throws InterruptedException {
 
@@ -13,28 +17,28 @@ public class Unreached {
         }
         TimeUnit.SECONDS.sleep(5);
 
-        System.out.println("not null");
         obj = new Object();
         for (int i = 0; i < 20_000; ++i) {
             hotMethod();
-
         }
         TimeUnit.SECONDS.sleep(5);
 
-        System.out.println("back to null");
         obj = null;
         for (int i = 0; i < 20_000; ++i) {
             hotMethod();
         }
         TimeUnit.SECONDS.sleep(5);
+
+        System.exit(0);
+
     }
 
     static void hotMethod() {
         if (obj == null) {
-            output = false;
+            isNull = true;
         }
         else {
-            output = true;
+            notNull = true;
         }
     }
 
