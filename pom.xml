@@ -41,6 +41,25 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <!-- Jetty run plugin -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <configuration>
+                    <executable>java</executable>
+                    <arguments>
+                        <argument>-XX:+UnlockCommercialFeatures</argument>
+                        <argument>-XX:+FlightRecorder</argument>
+                        <argument>-XX:+UnlockDiagnosticVMOptions</argument>
+                        <argument>-XX:+DebugNonSafepoints</argument>
+                        <argument>-classpath</argument>
+                        <classpath/>
+                        <argument>Jetty</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 
@@ -66,6 +85,13 @@
             <artifactId>jmh-generator-annprocess</artifactId>
             <version>${jmh.version}</version>
             <scope>provided</scope>
+        </dependency>
+
+        <!-- Jetty -->
+        <dependency>
+            <groupId>org.eclipse.jetty</groupId>
+            <artifactId>jetty-server</artifactId>
+            <version>9.4.0.M0</version>
         </dependency>
 
     </dependencies>
