@@ -30,7 +30,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 @Measurement(iterations = 5, time = 1)
 @Fork(2)
 @State(Scope.Thread)
-public class BenchmarkExample {
+public class ExampleBenchmark {
 
     public int[] arr;
     public int[] copy;
@@ -64,7 +64,7 @@ public class BenchmarkExample {
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
-                .include(BenchmarkExample.class.getSimpleName())
+                .include(ExampleBenchmark.class.getSimpleName())
 //                .threads(Runtime.getRuntime().availableProcessors())
                 .build();
 
