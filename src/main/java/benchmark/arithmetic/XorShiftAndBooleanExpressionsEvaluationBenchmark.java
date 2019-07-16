@@ -1,4 +1,4 @@
-package benchmark.math;
+package benchmark.arithmetic;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
