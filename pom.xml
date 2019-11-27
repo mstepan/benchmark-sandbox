@@ -4,11 +4,11 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.max</groupId>
     <artifactId>benchmark-sandbox</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jmh.version>1.20</jmh.version>
+        <jmh.version>1.22</jmh.version>
     </properties>
 
     <build>
@@ -18,13 +18,21 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.3</version>
+                <version>3.8.0</version>
                 <configuration>
                     <compilerId>javac-with-errorprone</compilerId>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <source>1.8</source>
                     <target>1.8</target>
                     <encoding>UTF-8</encoding>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>org.openjdk.jmh</groupId>
+                            <artifactId>jmh-generator-annprocess</artifactId>
+                            <version>${jmh.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+
                 </configuration>
                 <dependencies>
                     <dependency>
@@ -41,25 +49,6 @@
                     </dependency>
                 </dependencies>
             </plugin>
-
-            <!-- Jetty run plugin -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <configuration>
-                    <executable>java</executable>
-                    <arguments>
-                        <argument>-XX:+UnlockCommercialFeatures</argument>
-                        <argument>-XX:+FlightRecorder</argument>
-                        <argument>-XX:+UnlockDiagnosticVMOptions</argument>
-                        <argument>-XX:+DebugNonSafepoints</argument>
-                        <argument>-classpath</argument>
-                        <classpath/>
-                        <argument>Jetty</argument>
-                    </arguments>
-                </configuration>
-            </plugin>
-
         </plugins>
     </build>
 
@@ -85,13 +74,6 @@
             <artifactId>jmh-generator-annprocess</artifactId>
             <version>${jmh.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <!-- Jetty -->
-        <dependency>
-            <groupId>org.eclipse.jetty</groupId>
-            <artifactId>jetty-server</artifactId>
-            <version>9.4.0.M0</version>
         </dependency>
 
         <!-- Eclipse Collections (especially primitive collections useful) -->
