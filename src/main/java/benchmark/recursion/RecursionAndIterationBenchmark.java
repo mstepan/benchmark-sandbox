@@ -63,6 +63,9 @@ public class RecursionAndIterationBenchmark {
         bh.consume(mulIterative(x, y));
     }
 
+    /**
+     * Peasant algorithm for numbers multiplication that use pure recursion.
+     */
     private static int mulRec(int x, int y) {
 
         if (x == 0 || y == 0) {
@@ -76,6 +79,9 @@ public class RecursionAndIterationBenchmark {
         return y + mulRec(x / 2, y + y);
     }
 
+    /**
+     * The same Peasant algorithm but use tail optimization.
+     */
     private static int mulTailRecursive(int x, int y, int res) {
 
         if (x == 0 || y == 0) {
@@ -85,6 +91,9 @@ public class RecursionAndIterationBenchmark {
         return mulTailRecursive(x / 2, y + y, isEven(x) ? res : res + y);
     }
 
+    /**
+     * The same Peasant algorithm but in iterative style.
+     */
     private static int mulIterative(int initialX, int initialY) {
 
         if (initialX == 0 || initialY == 0) {
