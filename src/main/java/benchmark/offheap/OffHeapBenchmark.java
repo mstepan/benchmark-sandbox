@@ -35,8 +35,8 @@ import java.util.concurrent.TimeUnit;
  * OffHeapBenchmark.byteBufferNativeOrderIndexAccess  avgt   10  47.479 ± 8.832  ns/op
  * OffHeapBenchmark.unsafeAccess                      avgt   10  39.855 ± 3.440  ns/op
  */
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@BenchmarkMode(Mode.Throughput)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
 @Fork(2)
