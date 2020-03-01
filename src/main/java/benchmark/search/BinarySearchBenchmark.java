@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.search;
 
 import com.max.algs.util.ArrayUtils;
 import org.openjdk.jmh.annotations.*;

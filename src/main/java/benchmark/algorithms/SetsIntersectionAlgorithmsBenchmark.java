@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.algorithms;
 
 import java.util.Arrays;
 import java.util.HashSet;

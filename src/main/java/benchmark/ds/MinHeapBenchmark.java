@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.ds;
 
 import com.max.algs.ds.heap.MinHeap;
 import org.openjdk.jmh.annotations.*;

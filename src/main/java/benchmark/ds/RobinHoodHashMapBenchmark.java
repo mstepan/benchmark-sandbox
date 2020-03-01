@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.ds;
 
 import com.max.algs.hashing.robin_hood.RobinHoodHashMap;
 import com.max.algs.util.ArrayUtils;

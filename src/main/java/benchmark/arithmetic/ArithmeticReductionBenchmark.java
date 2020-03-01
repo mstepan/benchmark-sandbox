@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.arithmetic;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
