@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.algorithms;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -18,7 +18,6 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(5)
 public class CountWaysBenchmark {
-
 
     private static final Random RAND = ThreadLocalRandom.current();
 

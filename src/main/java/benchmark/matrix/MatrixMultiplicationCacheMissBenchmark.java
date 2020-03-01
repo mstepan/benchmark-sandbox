@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.matrix;
 
 import com.max.algs.util.MatrixUtils;
 import org.openjdk.jmh.annotations.*;

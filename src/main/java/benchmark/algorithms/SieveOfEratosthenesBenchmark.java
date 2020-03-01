@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.algorithms;
 
 import com.max.algs.primes.PrimeUtilities;
 import org.openjdk.jmh.annotations.*;

@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.ds;
 
 import com.max.algs.ds.tree.BSTree;
 import org.openjdk.jmh.annotations.*;
@@ -16,7 +16,6 @@ import java.util.concurrent.TimeUnit;
 @Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(5)
 public class InOrderTraversationBenchmark {
-
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

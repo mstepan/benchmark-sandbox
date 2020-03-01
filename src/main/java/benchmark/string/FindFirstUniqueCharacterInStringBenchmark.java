@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.string;
 
 import com.max.algs.string.StringUtils;
 import org.openjdk.jmh.annotations.*;

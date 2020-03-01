@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.arithmetic;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -19,7 +19,6 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Measurement(iterations = 3, time = 1, timeUnit = TimeUnit.SECONDS)
 @Fork(1)
 public class SumOfDigitsBenchmark {
-
 
     private final Random rand = ThreadLocalRandom.current();
 

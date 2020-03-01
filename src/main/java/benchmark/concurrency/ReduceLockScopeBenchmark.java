@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.concurrency;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
@@ -23,7 +23,6 @@ import java.util.concurrent.TimeUnit;
  * ReduceLockScopeBenchmark.smallScope  avgt    5  0.050 ± 0.010  ms/op
  */
 public class ReduceLockScopeBenchmark {
-
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()

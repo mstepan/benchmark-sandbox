@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.arithmetic;
 
 import com.max.algs.string.matching.NewShiftAndMatcher;
 import com.max.algs.string.matching.ShiftOrMatcher;

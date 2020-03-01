@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.ds;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

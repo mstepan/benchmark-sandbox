@@ -1,4 +1,4 @@
-package benchmark;
+package benchmark.cpu;
 
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
