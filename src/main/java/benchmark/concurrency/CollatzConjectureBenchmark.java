@@ -1,12 +1,25 @@
 package benchmark.concurrency;
 
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Group;
+import org.openjdk.jmh.annotations.GroupThreads;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -19,12 +32,12 @@ import java.util.stream.IntStream;
 @State(Scope.Group)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
-@Measurement(iterations = 5, time = 1, timeUnit = TimeUnit.SECONDS)
+@Warmup(iterations = 5, time = 1)
+@Measurement(iterations = 5, time = 1)
 @Fork(5)
 public class CollatzConjectureBenchmark {
 
-    private static final int ELEMS_COUNT = 1_000_000;
+    private static final int ELEMS_COUNT = 1_000;
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
@@ -35,8 +48,6 @@ public class CollatzConjectureBenchmark {
         new Runner(opt).run();
     }
 
-
-
     @Benchmark
     @Group("collatzHashNoResizing")
     @GroupThreads(2)
@@ -44,18 +55,11 @@ public class CollatzConjectureBenchmark {
         collatzHashNoResizing(ELEMS_COUNT);
     }
 
-    @Benchmark
-    @Group("collatzHashSet")
-    @GroupThreads(2)
-    public void collatzHashSet() {
-        collatzHashSet(ELEMS_COUNT);
-    }
+    private boolean collatzHashNoResizing(int n) {
 
-    private boolean collatzBitSet(int n) {
-
-        BitSet solvable = new BitSet(n + 1);
-        solvable.set(1, true);
-        solvable.set(2, true);
+        Set<Integer> solvable = new HashSet<>((int) (n / 0.75 + 1));
+        solvable.add(1);
+        solvable.add(2);
 
         for (int i = 3; i <= n; ++i) {
 
@@ -68,9 +72,9 @@ public class CollatzConjectureBenchmark {
                 if (curValue <= n) {
                     partialSolutions.add((int) curValue);
 
-                    if (solvable.get((int) curValue)) {
+                    if (solvable.contains((int) curValue)) {
                         for (int singleSol : partialSolutions) {
-                            solvable.set(singleSol, true);
+                            solvable.add(singleSol);
                         }
 
                         break;
@@ -88,6 +92,13 @@ public class CollatzConjectureBenchmark {
         }
 
         return true;
+    }
+
+    @Benchmark
+    @Group("collatzHashSet")
+    @GroupThreads(2)
+    public void collatzHashSet() {
+        collatzHashSet(ELEMS_COUNT);
     }
 
     private boolean collatzHashSet(int n) {
@@ -129,52 +140,13 @@ public class CollatzConjectureBenchmark {
         return true;
     }
 
-    private boolean collatzHashNoResizing(int n) {
-
-        Set<Integer> solvable = new HashSet<>((int) (n / 0.75 + 1));
-        solvable.add(1);
-        solvable.add(2);
-
-        for (int i = 3; i <= n; ++i) {
-
-            long curValue = i;
-
-            List<Integer> partialSolutions = new ArrayList<>();
-
-            while (true) {
-
-                if (curValue <= n) {
-                    partialSolutions.add((int) curValue);
-
-                    if (solvable.contains((int) curValue)) {
-                        for (int singleSol : partialSolutions) {
-                            solvable.add(singleSol);
-                        }
-
-                        break;
-                    }
-                }
-
-                // even case
-                if ((curValue & 1) == 0) {
-                    curValue = curValue >> 1L;
-                }
-                else {
-                    curValue = ((curValue << 1) | 1) + curValue;
-                }
-            }
-        }
-
-        return true;
-    }
-    //================================================================
-
     @Benchmark
     @Group("isCollatzHoldsSequential")
     @GroupThreads(2)
     public void isCollatzHoldsSequential() {
         isCollatzHoldsSequential(ELEMS_COUNT);
     }
+
     static boolean isCollatzHoldsSequential(int lastValue) {
         for (int i = 3; i <= lastValue; i += 2) {
             if (!isCollatzValidForValue(i, i - 1)) {
@@ -192,7 +164,8 @@ public class CollatzConjectureBenchmark {
     public void isCollatzHoldsStream() {
         isCollatzHoldsStream(ELEMS_COUNT);
     }
-    static boolean isCollatzHoldsStream(int lastValue) {
+
+    private static boolean isCollatzHoldsStream(int lastValue) {
         return IntStream.rangeClosed(3, lastValue).
                 filter(value -> !isCollatzValidForValue(value, value - 1)).count() == 0L;
     }
@@ -203,7 +176,8 @@ public class CollatzConjectureBenchmark {
     public void isCollatzHoldsParallelStream() {
         isCollatzHoldsParallelStream(ELEMS_COUNT);
     }
-    static boolean isCollatzHoldsParallelStream(int lastValue) {
+
+    private static boolean isCollatzHoldsParallelStream(int lastValue) {
         return IntStream.rangeClosed(3, lastValue).parallel().
                 filter(value -> !isCollatzValidForValue(value, value - 1)).count() == 0L;
     }
@@ -212,9 +186,10 @@ public class CollatzConjectureBenchmark {
     @Benchmark
     @Group("isCollatzHoldsForkJoinPool")
     @GroupThreads(2)
-    public void isCollatzHoldsForkJoinPool()throws Exception {
+    public void isCollatzHoldsForkJoinPool() throws Exception {
         isCollatzHoldsForkJoinPool(ELEMS_COUNT);
     }
+
     private static final class CollatzTask extends RecursiveTask<Boolean> {
 
         private final int from;
@@ -249,7 +224,8 @@ public class CollatzConjectureBenchmark {
             return rightPart.compute() && leftPart.join();
         }
     }
-    static boolean isCollatzHoldsForkJoinPool(int lastValue) throws InterruptedException, ExecutionException {
+
+    private static boolean isCollatzHoldsForkJoinPool(int lastValue) throws InterruptedException, ExecutionException {
         ForkJoinPool pool = new ForkJoinPool();
 
         try {
@@ -264,10 +240,11 @@ public class CollatzConjectureBenchmark {
     @Benchmark
     @Group("isCollatzHoldsPool")
     @GroupThreads(2)
-    public void isCollatzHoldsPool()throws Exception {
+    public void isCollatzHoldsPool() {
         isCollatzHoldsPool(ELEMS_COUNT);
     }
-    static boolean isCollatzHoldsPool(int lastValue) {
+
+    private static boolean isCollatzHoldsPool(int lastValue) {
 
         int threadsCount = Runtime.getRuntime().availableProcessors() - 1;
 
@@ -311,7 +288,6 @@ public class CollatzConjectureBenchmark {
         }
 
     }
-
 
     private static final int THRESHOLD = 10_000;
 
