@@ -18,7 +18,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
-import sun.misc.Unsafe;
+//import sun.misc.Unsafe;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -45,7 +45,7 @@ public class OffHeapBenchmark {
 
     private static final int BUF_LENGTH = 10;
 
-    private final Unsafe unsafe = UnsafeUtils.getUnsafe();
+//    private final Unsafe unsafe = UnsafeUtils.getUnsafe();
 
     ByteBuffer buf;
     ByteBuffer bufNativeOrder;
@@ -70,14 +70,14 @@ public class OffHeapBenchmark {
 
     @Setup(Level.Invocation)
     public void setUp() {
-        buf = create(false);
-        bufNativeOrder = create(true);
-
-        baseAddress = unsafe.allocateMemory(4 * BUF_LENGTH);
-
-        for (int i = 0; i < BUF_LENGTH; ++i) {
-            unsafe.putInt(baseAddress + (i * 4), RAND.nextInt(100));
-        }
+//        buf = create(false);
+//        bufNativeOrder = create(true);
+//
+//        baseAddress = unsafe.allocateMemory(4 * BUF_LENGTH);
+//
+//        for (int i = 0; i < BUF_LENGTH; ++i) {
+//            unsafe.putInt(baseAddress + (i * 4), RAND.nextInt(100));
+//        }
     }
 
     @TearDown(Level.Invocation)
@@ -138,13 +138,13 @@ public class OffHeapBenchmark {
      */
     @Benchmark
     public void unsafeAccess(Blackhole bh) {
-        int sum = 0;
-
-        for (int i = 0; i < BUF_LENGTH; ++i) {
-            sum += unsafe.getInt(baseAddress + (i * 4));
-        }
-
-        bh.consume(sum);
+//        int sum = 0;
+//
+//        for (int i = 0; i < BUF_LENGTH; ++i) {
+//            sum += unsafe.getInt(baseAddress + (i * 4));
+//        }
+//
+//        bh.consume(sum);
     }
 
     public static void main(String[] args) throws RunnerException {
