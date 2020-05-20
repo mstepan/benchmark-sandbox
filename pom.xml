@@ -14,13 +14,11 @@
 
     <build>
         <plugins>
-
-            <!-- Java compile plugin with Error Prone -->
+            <!-- Java compile plugin -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
-
                 <configuration>
                     <forceJavacCompilerUse>true</forceJavacCompilerUse>
                     <release>${java.version}</release>
@@ -37,7 +35,6 @@
         </plugins>
     </build>
 
-
     <dependencies>
 
         <!-- My projects -->
@@ -53,7 +50,6 @@
             <artifactId>jmh-core</artifactId>
             <version>${jmh.version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-generator-annprocess</artifactId>
@@ -67,7 +63,6 @@
             <artifactId>eclipse-collections-api</artifactId>
             <version>9.2.0</version>
         </dependency>
-
         <dependency>
             <groupId>org.eclipse.collections</groupId>
             <artifactId>eclipse-collections</artifactId>
@@ -75,6 +70,5 @@
         </dependency>
 
     </dependencies>
-
 
 </project>
