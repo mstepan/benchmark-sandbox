@@ -24,12 +24,12 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 /**
  * Micro benchmark example.
  */
-@OutputTimeUnit(TimeUnit.NANOSECONDS)
-@BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 5, time = 1)
-@Measurement(iterations = 5, time = 1)
-@Fork(2)
+@Fork(2) // default is 10
+@Warmup(iterations = 2, time = 1) // default is 10
+@Measurement(iterations = 5, time = 1) // default is 10
 @State(Scope.Thread)
+@BenchmarkMode(Mode.AverageTime)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class ExampleBenchmark {
 
     public int[] arr;
