@@ -1,2 +1,4 @@
-# benchmark-sandbox
-## Suites with java micro-benchmark harnesses (use java 13).
+# Micro benchmark sandbox
+
+* Use JMH and java 17 (set via `.java-version`).
+
